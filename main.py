@@ -11,10 +11,10 @@ import vt
 import pscan
 
 if __name__ == "__main__":
-    vt_fscan = vt.VT_File_Scan()
+    file_path = "C:\\Users\\HP\\Desktop\\VirusTotal\\HexToDec.cpp"
+    vt_fscan = vt.VT_File_Scan(file_path)
     vt_uscan = vt.VT_URL_Scan()
     process = pscan.Process()
-    file_path = "C:\\Users\\HP\\Desktop\\VirusTotal\\HexToDec.cpp"
     #scan_result = vt_fscan.upload(file_path)
     #analyse = vt_fscan.analyse()
     #print("Scan Result:", scan_result)
