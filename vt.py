@@ -21,13 +21,13 @@ class VT:
         }
 
 class VT_File_Scan(VT):
-    def __init__(self):
+    def __init__(self, f_path):
         VT.__init__(self)
-
+        self.file_path = f_path
     #Uploading file to analyse
-    def upload(self,file_path):
+    def upload(self):
         upload_url = self.VT_API_URL + "files"
-        files = {'file' : open(file_path , 'rb')}
+        files = {'file' : open(self.file_path , 'rb')}
         response = requests.post(upload_url, headers = self.headers, files = files)
 
         if response.status_code == 200:
@@ -65,7 +65,7 @@ class VT_File_Scan(VT):
                         print ("--------------------------------------------------\n")
 
             elif attr.get('status') == 'queued':
-                with open(os.path.abspath(file_path), "rb") as f_path: #If status queued send file's hash to details
+                with open(os.path.abspath(self.file_path), "rb") as f_path: #If status queued send file's hash to details
                     b = f_path.read()
                     hashsum = hashlib.sha256(b).hexdigest()
                     self.details(hashsum)
@@ -99,6 +99,7 @@ class VT_File_Scan(VT):
 class VT_URL_Scan(VT):
     def __init__(self):
         VT.__init__(self)
+        self.analysis_file_path = "C:\\Users\\HP\\Desktop\\MiniSoar\\"  # Specify your desired directory path here
 
     #Scanning url
     def scan(self,target_url):
@@ -126,9 +127,10 @@ class VT_URL_Scan(VT):
         if response.status_code == 200:
             url = str(url_attr.get('url'))
             match = re.search(pattern, url)
-            analysis_file_path = "C:\\Users\\HP\\Desktop\\VirusTotal\\"  # Specify your desired directory path here
-            print(url.replace(':', '_'))
-            with open(os.path.join(analysis_file_path, match.group(1) + "_analysis.txt"), "w+") as f:
+
+            url_harmless = url_stats.get('harmless')
+            url_malicious = url_stats.get('malicious')
+            with open(os.path.join(self.analysis_file_path, match.group(1) + "_analysis.txt"), "w+") as f:
                 f.write("Malicious : " + str(url_stats.get('malicious')) + "\n")
                 f.write("Suspicious : " + str(url_stats.get('suspicious')) + "\n")
                 f.write("Harmless : " + str(url_stats.get('harmless')) + "\n")
@@ -142,18 +144,33 @@ class VT_URL_Scan(VT):
                         f.write("result : " + url_results[ur].get('result') + "\n")
                         f.write("method : " + url_results[ur].get('method') + "\n")
                         f.write("--------------------------------------------------\n")
-            
+            vt_list = VT_URL_List()
+            vt_list.setList(url,url_harmless,url_malicious)
         else:
             return response.status_code        
 
-if __name__ == "__main__": 
-    vt_fscan = VT_File_Scan()
-    vt_uscan = VT_URL_Scan()
-    file_path = "C:\\Users\\HP\\Desktop\\MiniSoar\\HexToDec.cpp"
-    scan_result = vt_fscan.upload(file_path)
-    analyse = vt_fscan.analyse()
-    print("Scan Result:", scan_result)
+class VT_URL_List(VT_URL_Scan):
+    def __init__(self):
+        VT_URL_Scan.__init__(self)
 
-    #url = "https://youtube.com/"
-    #uscan = vt_uscan.scan(url)
-    #rep = vt_uscan.url_analyse()
+    def setList(self,URL,url_harmless,url_malicious):
+        if url_harmless > 0:
+            print("a")
+            with open(os.path.join(self.analysis_file_path,"WhiteList.txt"), "a+") as f:
+                f.write(URL + "\n")
+        if url_malicious > 5:
+            with open(os.path.join(self.analysis_file_path,"BlackList.txt"), "a+") as f:
+                f.write(URL + "\n")
+
+if __name__ == "__main__": 
+    f_path = "a"
+    vt_fscan = VT_File_Scan(f_path)
+    vt_uscan = VT_URL_Scan()
+    #file_path = "C:\\Users\\HP\\Desktop\\MiniSoar\\HexToDec.cpp"
+    #scan_result = vt_fscan.upload(file_path)
+    #analyse = vt_fscan.analyse()
+    #print("Scan Result:", scan_result)
+
+    url = "https://youtube.com/"
+    uscan = vt_uscan.scan(url)
+    rep = vt_uscan.url_analyse()
