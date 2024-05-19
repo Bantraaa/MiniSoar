@@ -1,17 +1,13 @@
 import os
-import sys
-import time
 import json
 import requests
-import argparse
 import re
 import hashlib
-from bs4 import BeautifulSoup
 
 class VT:
     def __init__(self):
         #VirusTotal API Key
-        self.VT_API_KEY = "adaaedcc58e3262dc8b6106ec6f56d1e46c318d59886220733462ed43252fb7b"
+        self.VT_API_KEY = "adaaedcc58e3262dc8b6106ec6f56d1e46c318d59886220733462ed43252fb7b" # Your API key here
         # VirusTotal API URL
         self.VT_API_URL = "https://www.virustotal.com/api/v3/"
         self.headers = {
@@ -154,23 +150,31 @@ class VT_URL_List(VT_URL_Scan):
         VT_URL_Scan.__init__(self)
 
     def setList(self,URL,url_harmless,url_malicious):
-        if url_harmless > 0:
+        if url_harmless > 3:
             print("a")
-            with open(os.path.join(self.analysis_file_path,"WhiteList.txt"), "a+") as f:
-                f.write(URL + "\n")
+            list_path = os.path.join(self.analysis_file_path, "WhiteList.txt")
+
+            if not os.path.exists(list_path):
+                with open(list_path, "w"):
+                    pass 
+
+            with open(list_path, "r") as f:
+                urls = f.readlines()
+
+            if URL + "\n" not in urls:
+                with open(list_path, "a+") as f:
+                    f.write(URL + "\n")
+
         if url_malicious > 5:
-            with open(os.path.join(self.analysis_file_path,"BlackList.txt"), "a+") as f:
-                f.write(URL + "\n")
+            list_path = os.path.join(self.analysis_file_path, "WhiteList.txt")
 
-if __name__ == "__main__": 
-    f_path = "a"
-    vt_fscan = VT_File_Scan(f_path)
-    vt_uscan = VT_URL_Scan()
-    #file_path = "C:\\Users\\HP\\Desktop\\MiniSoar\\HexToDec.cpp"
-    #scan_result = vt_fscan.upload(file_path)
-    #analyse = vt_fscan.analyse()
-    #print("Scan Result:", scan_result)
+            if not os.path.exists(list_path):
+                with open(list_path, "w"):
+                    pass 
 
-    url = "https://youtube.com/"
-    uscan = vt_uscan.scan(url)
-    rep = vt_uscan.url_analyse()
+            with open(list_path, "r") as f:
+                urls = f.readlines()
+
+            if URL + "\n" not in urls:
+                with open(list_path, "a+") as f:
+                    f.write(URL + "\n")
