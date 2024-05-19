@@ -1,26 +1,17 @@
-import os
-import sys
-import time
-import json
-import requests
-import argparse
-import re
-import hashlib
-from bs4 import BeautifulSoup
 import vt
 import pscan
 
+
 if __name__ == "__main__":
-    file_path = "C:\\Users\\HP\\Desktop\\VirusTotal\\HexToDec.cpp"
+    file_path = "C:\\Users\\HP\\Desktop\\MiniSoar\\HexToDec.cpp"
     vt_fscan = vt.VT_File_Scan(file_path)
     vt_uscan = vt.VT_URL_Scan()
     process = pscan.Process()
-    #scan_result = vt_fscan.upload(file_path)
-    #analyse = vt_fscan.analyse()
-    #print("Scan Result:", scan_result)
+    scan_result = vt_fscan.upload()
+    analyse = vt_fscan.analyse()
 
-    #url = "https://youtube.com/"
-    #uscan = vt_uscan.scan(url)
-    #rep = vt_uscan.url_analyse()
+    url = "https://facebook.com/"
+    uscan = vt_uscan.scan(url)
+    rep = vt_uscan.url_analyse()
 
-    process.control("curl.exe")
+    #process.control("curl.exe")
