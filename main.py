@@ -1,17 +1,14 @@
 import vt
 import pscan
 
-
 if __name__ == "__main__":
-    file_path = "C:\\Users\\HP\\Desktop\\MiniSoar\\HexToDec.cpp"
+    file_path = "" # Enter path of the file
     vt_fscan = vt.VT_File_Scan(file_path)
-    vt_uscan = vt.VT_URL_Scan()
+    vt_uscan = vt.VT_URL_Scan() 
     process = pscan.Process()
-    scan_result = vt_fscan.upload()
-    analyse = vt_fscan.analyse()
 
-    url = "https://facebook.com/"
+    url = "https://youtube.com/" # Enter the URL
     uscan = vt_uscan.scan(url)
     rep = vt_uscan.url_analyse()
 
-    #process.control("curl.exe")
+    process.control("curl.exe") # Enter the process
