@@ -4,10 +4,11 @@ import requests
 import re
 import hashlib
 
+# Specify your path to save the file scanning results in line 99 and enter your API key in line 11
 class VT:
     def __init__(self):
         #VirusTotal API Key
-        self.VT_API_KEY = "adaaedcc58e3262dc8b6106ec6f56d1e46c318d59886220733462ed43252fb7b" # Your API key here
+        self.VT_API_KEY = "" # Your API key here
         # VirusTotal API URL
         self.VT_API_URL = "https://www.virustotal.com/api/v3/"
         self.headers = {
@@ -95,7 +96,7 @@ class VT_File_Scan(VT):
 class VT_URL_Scan(VT):
     def __init__(self):
         VT.__init__(self)
-        self.analysis_file_path = "C:\\Users\\HP\\Desktop\\MiniSoar\\"  # Specify your desired directory path here
+        self.analysis_file_path = ""  # Specify your desired directory path here
 
     #Scanning url
     def scan(self,target_url):
@@ -151,7 +152,6 @@ class VT_URL_List(VT_URL_Scan):
 
     def setList(self,URL,url_harmless,url_malicious):
         if url_harmless > 3:
-            print("a")
             list_path = os.path.join(self.analysis_file_path, "WhiteList.txt")
 
             if not os.path.exists(list_path):
